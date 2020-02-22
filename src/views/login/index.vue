@@ -1,0 +1,196 @@
+<template>
+  <div class="login-wrap">
+    <!-- 左侧登录的盒子 -->
+    <div class="login-box">
+      <!-- 标题盒子 -->
+      <div class="title-box">
+        <!-- logo -->
+        <img class="logo" src="./images/login_logo.png" alt />
+        <span class="left-title">黑马面面</span>
+        <!-- 竖线 -->
+        <span class="line"></span>
+        <span class="right-title">用户登录</span>
+      </div>
+
+      <!-- 表单 -->
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="43px" class="demo-ruleForm">
+        <el-form-item placeholder="请输入手机号" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+
+        <el-form-item placeholder="请输入密码" prop="box">
+          <el-input show-password v-model="ruleForm.box"></el-input>
+        </el-form-item>
+        
+        <el-form-item prop="code">
+          <el-row>
+            <!-- 第一列。放的是输入框 -->
+            <el-col :span="17">
+              <el-input v-model="ruleForm.code" placeholder="请输入验证码" prefix-icon="el-icon-key"></el-input>
+            </el-col>
+            <el-col :span="7">
+              <img class="code" src="./images/login_code.png" alt />
+            </el-col>
+          </el-row>
+        </el-form-item>
+
+        <el-form-item prop="agree">
+          <div class="agree">
+            <div class="agree-box" style="display:flex;align-items:center;" >
+            <el-checkbox v-model="ruleForm.agree" ></el-checkbox>
+            <span class="el-checkbox__label">
+              我已阅读并同意
+              <el-link type="primary">用户协议</el-link>和
+              <el-link type="primary">隐私条款</el-link>
+            </span>
+          </div>
+          </div>
+          
+        </el-form-item>
+
+        <el-form-item>
+          <el-button class="box-btn" type="primary" @click="submitForm('ruleForm')">登录</el-button>
+          <el-button class="box-btn" type="primary">注册</el-button>
+          
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 右侧图片 -->
+    <img src="./images/login_banner_ele.png" alt />
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      ruleForm: {
+        name: "",
+        box: "",
+        code:'',
+        agree:false
+      },
+      rules: {
+        name: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        box: [
+          { required: true, message: "请输入账号", trigger: "blur" },
+          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+        ],
+        code: [{ required: true, message: "验证码不能为空", trigger: "blur" }],
+
+        agree:[
+          // 多选框没有失去焦点，只有值改变事件
+          // 因为checkbox其实他不可能值为空，除非你强行赋值为空
+          // 所以我们不能拿值是否为空来做验证了
+          // { required:true, message:'必须勾选同意用户协议',trigger:"change"},
+
+          // 只有值为true才满足条件，否则代表不匹配
+          { pattern:/true/, message:'必须勾选同意用户协议',trigger:"change"}
+        ]
+      }
+    };
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.login-wrap {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    225deg,
+    rgba(20, 147, 250, 1),
+    rgba(1, 198, 250, 1)
+  );
+
+  /* 给谁加flex，就代表他的子元素使用弹性布局 */
+  display: flex;
+  /* 主轴排列为space-around */
+  justify-content: space-around;
+  /* 副轴为：center */
+  align-items: center;
+
+  .login-box {
+    width: 478px;
+    height: 550px;
+    padding-right: 41px;
+    // 把内间距内聚（默认是外扩）
+    box-sizing: border-box;
+    background: rgba(245, 245, 245, 1);
+
+    .title-box {
+      display: flex;
+      // 副轴居中
+      align-items: center;
+      margin-top: 50px;
+      margin-left: 48px;
+      margin-bottom: 43px;
+
+      .logo {
+        width: 22px;
+        height: 17px;
+        margin-right: 16px;
+      }
+
+      .left-title {
+        margin-right: 14px;
+        font-size: 22px;
+      }
+
+      .line {
+        width: 1px;
+        height: 28px;
+        background: rgba(199, 199, 199, 1);
+        margin-right: 12px;
+      }
+
+      .right-title {
+        font-size: 21px;
+      }
+    }
+
+    .code {
+      width: 100%;
+      height: 42px;
+      vertical-align: top;
+    }
+
+    //可加可不加看自己习惯
+    
+     
+      .agree {
+      display: flex;
+  
+      .el-checkbox__label {
+        display: flex;
+        align-items: center;
+      }
+    }
+    
+    
+
+    .box-btn {
+      width: 100%;
+
+      &:nth-child(2) {
+        margin-left: 0;
+        margin-top: 26px;
+      }
+    }
+  }
+}
+</style>
+
+
