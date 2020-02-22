@@ -13,7 +13,13 @@
       </div>
 
       <!-- 表单 -->
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="43px" class="demo-ruleForm">
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="43px"
+        class="demo-ruleForm"
+      >
         <el-form-item placeholder="请输入手机号" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
@@ -21,7 +27,7 @@
         <el-form-item placeholder="请输入密码" prop="box">
           <el-input show-password v-model="ruleForm.box"></el-input>
         </el-form-item>
-        
+
         <el-form-item prop="code">
           <el-row>
             <!-- 第一列。放的是输入框 -->
@@ -36,39 +42,52 @@
 
         <el-form-item prop="agree">
           <div class="agree">
-            <div class="agree-box" style="display:flex;align-items:center;" >
-            <el-checkbox v-model="ruleForm.agree" ></el-checkbox>
-            <span class="el-checkbox__label">
-              我已阅读并同意
-              <el-link type="primary">用户协议</el-link>和
-              <el-link type="primary">隐私条款</el-link>
-            </span>
+            <div class="agree-box" style="display:flex;align-items:center;">
+              <el-checkbox v-model="ruleForm.agree"></el-checkbox>
+              <span class="el-checkbox__label">
+                我已阅读并同意
+                <el-link type="primary">用户协议</el-link>和
+                <el-link type="primary">隐私条款</el-link>
+              </span>
+            </div>
           </div>
-          </div>
-          
         </el-form-item>
 
         <el-form-item>
           <el-button class="box-btn" type="primary" @click="submitForm('ruleForm')">登录</el-button>
           <el-button class="box-btn" type="primary">注册</el-button>
-          
         </el-form-item>
       </el-form>
     </div>
     <!-- 右侧图片 -->
     <img src="./images/login_banner_ele.png" alt />
+
+    <!-- 注册对话框 -->
+    <reg ref="reg"></reg>
   </div>
 </template>
 
 <script>
+// 1.导入组件
+import reg from './components/register.vue'
+
+// 2.注册组件
+
+// 3.在需要用组件的地方，写这个组件的标签
 export default {
+  
+  components:{
+    reg
+  },
   data() {
     return {
+      // 跟表单双向绑定的数据
       ruleForm: {
         name: "",
         box: "",
-        code:'',
-        agree:false
+        code: "",
+        agree: false,
+        
       },
       rules: {
         name: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -78,14 +97,18 @@ export default {
         ],
         code: [{ required: true, message: "验证码不能为空", trigger: "blur" }],
 
-        agree:[
+        agree: [
           // 多选框没有失去焦点，只有值改变事件
           // 因为checkbox其实他不可能值为空，除非你强行赋值为空
           // 所以我们不能拿值是否为空来做验证了
           // { required:true, message:'必须勾选同意用户协议',trigger:"change"},
 
           // 只有值为true才满足条件，否则代表不匹配
-          { pattern:/true/, message:'必须勾选同意用户协议',trigger:"change"}
+          {
+            pattern: /true/,
+            message: "必须勾选同意用户协议",
+            trigger: "change"
+          }
         ]
       }
     };
@@ -168,18 +191,15 @@ export default {
     }
 
     //可加可不加看自己习惯
-    
-     
-      .agree {
+
+    .agree {
       display: flex;
-  
+
       .el-checkbox__label {
         display: flex;
         align-items: center;
       }
     }
-    
-    
 
     .box-btn {
       width: 100%;
