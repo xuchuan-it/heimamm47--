@@ -55,7 +55,7 @@
 
         <el-form-item>
           <el-button class="box-btn" type="primary" @click="submitForm('ruleForm')">登录</el-button>
-          <el-button class="box-btn" type="primary">注册</el-button>
+          <el-button class="box-btn" type="primary" @click="showReg">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -114,7 +114,10 @@ export default {
     };
   },
   methods: {
+     // 登录的点击事件
+    
     submitForm(formName) {
+      //找到表单对象 调用validate方法
       this.$refs[formName].validate(valid => {
         if (valid) {
           alert("submit!");
@@ -123,6 +126,11 @@ export default {
           return false;
         }
       });
+    },
+    // 注册的点击事件
+    showReg(){
+
+      this.$refs.reg.dialogFormVisible = true;
     }
   }
 };
