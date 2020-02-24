@@ -13,48 +13,45 @@
       </div>
 
       <!-- 表单 -->
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="43px"
-        class="demo-ruleForm"
-      >
-        <el-form-item placeholder="请输入手机号" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+      <el-form ref="loginForm" :model="form" label-width="43px" :rules="rules">
+        <el-form-item prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入手机号" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
 
-        <el-form-item placeholder="请输入密码" prop="box">
-          <el-input show-password v-model="ruleForm.box"></el-input>
+        <el-form-item prop="password">
+          <el-input
+            v-model="form.password"
+            placeholder="请输入密码"
+            show-password
+            prefix-icon="el-icon-lock"
+          ></el-input>
         </el-form-item>
 
         <el-form-item prop="code">
           <el-row>
             <!-- 第一列。放的是输入框 -->
             <el-col :span="17">
-              <el-input v-model="ruleForm.code" placeholder="请输入验证码" prefix-icon="el-icon-key"></el-input>
+              <el-input v-model="form.code" placeholder="请输入验证码" prefix-icon="el-icon-key"></el-input>
             </el-col>
             <el-col :span="7">
-              <img class="code" src="./images/login_code.png" alt />
+              <img @click="changeImgCode" class="code" :src="imgUrl" alt />
             </el-col>
           </el-row>
         </el-form-item>
 
         <el-form-item prop="agree">
-          <div class="agree">
-            <div class="agree-box" style="display:flex;align-items:center;">
-              <el-checkbox v-model="ruleForm.agree"></el-checkbox>
-              <span class="el-checkbox__label">
-                我已阅读并同意
-                <el-link type="primary">用户协议</el-link>和
-                <el-link type="primary">隐私条款</el-link>
-              </span>
-            </div>
+          <div class="agree-box" style="display:flex;align-items:center;">
+            <el-checkbox v-model="form.agree" class="agree"></el-checkbox>
+            <span>
+              我已阅读并同意
+              <el-link type="primary">用户协议</el-link>和
+              <el-link type="primary">隐私条款</el-link>
+            </span>
           </div>
         </el-form-item>
 
         <el-form-item>
-          <el-button class="box-btn" type="primary" @click="submitForm('ruleForm')">登录</el-button>
+          <el-button class="box-btn" type="primary" @click="doLogin">登录</el-button>
           <el-button class="box-btn" type="primary" @click="showReg">注册</el-button>
         </el-form-item>
       </el-form>
@@ -69,25 +66,26 @@
 
 <script>
 // 1.导入组件
-import reg from './components/register.vue'
-
+import reg from "./components/register.vue";
+import { login } from "@/api/login.js";
+import { setToken } from "@/utilis/token.js";
 // 2.注册组件
 
 // 3.在需要用组件的地方，写这个组件的标签
 export default {
-  
-  components:{
+  components: {
     reg
   },
   data() {
     return {
+      //图片地址
+      imgUrl: process.env.VUE_APP_URL + "/captcha?type=login",
       // 跟表单双向绑定的数据
-      ruleForm: {
-        name: "",
-        box: "",
+      form: {
+        phone: "",
+        password: "",
         code: "",
-        agree: false,
-        
+        agree: false
       },
       rules: {
         name: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -114,22 +112,44 @@ export default {
     };
   },
   methods: {
-     // 登录的点击事件
-    
-    submitForm(formName) {
-      //找到表单对象 调用validate方法
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+    changeImgCode() {
+      this.imgUrl =
+        process.env.VUE_APP_URL + "/captcha?type=login&sb=" + Date.now();
+    },
+    //登录点击事件
+   doLogin() {
+      // 找到表单对象，调用validate方法
+      this.$refs.loginForm.validate(v => {
+        if (v) {
+         
+          // 正儿八经发请求比较合理
+          login({
+            phone: this.form.phone,
+            password:this.form.password,
+            code: this.form.code
+          })
+          .then( res => {
+
+            if(res.data.code == 200){
+
+              //把token存起来
+              // window.localStorage.setItem('token',res.data.data.token)
+              setToken(res.data.data.token)
+              this.$message.success('登录成功')
+              this.$router.push('/index');
+            }else{
+
+              this.$message.error(res.data.message)
+            }
+            
+          })
         }
       });
     },
-    // 注册的点击事件
-    showReg(){
 
+    // 注册的点击事件
+    showReg() {
+      //点击显示注册框
       this.$refs.reg.dialogFormVisible = true;
     }
   }
