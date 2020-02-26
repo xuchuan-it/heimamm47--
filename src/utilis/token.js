@@ -2,7 +2,7 @@
 const TOKENKEY = 'mmtoken'
 
 //获取token, 要记得return
-export function grtToken(){
+export function getToken(){
     return window.localStorage.getItem(TOKENKEY)
 }
 
