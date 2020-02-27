@@ -11,6 +11,7 @@ import { Message } from 'element-ui';
 
 // 导入路由
 import VueRouter from 'vue-router'
+import store from '../store/index.js'
 
 // 注册路由
 Vue.use(VueRouter)
@@ -88,6 +89,9 @@ router.beforeEach((to, from, next) => {
 
       if (res.data.code == 200) {
 
+        //把服务器返回的用户名取出来存到vuex
+        store.commit('changeUsername', res.data.data.username);
+        store.commit('changeAvatar', process.env.VUE_APP_URL + '/' + res.data.data.avatar);
         //代表token是对的，那么直接放行
         next()
 

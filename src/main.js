@@ -8,10 +8,13 @@ Vue.use(ElementUI);
 
 // 导入路由对象，默认优先会找js文件
 import router from './router/index'
+//导入vuex对象
+import store from './store/index'
 
 // 导入样式直接import 路径就可以了
 import "./style/base.css"
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')

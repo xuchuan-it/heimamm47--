@@ -3,6 +3,7 @@ import axios from 'axios'
 //导入操作token的文件
 import {getToken} from '@/utilis/token.js'
 
+
 // create :  axiosd 克隆方法
 //克隆一个axios对象出来,
 //他的名字叫indexRequest

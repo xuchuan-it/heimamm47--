@@ -10,8 +10,8 @@
         <span>黑马面面</span>
       </div>
       <div class="right">
-        <img :src="avatar" alt />
-        <span class="name">{{ username }},你好</span>
+        <img :src="$store.state.avatar" alt />
+        <span class="name">{{ $store.state.username }},你好</span>
 
         <button size="mini" @click="doLogout">退出</button>
       </div>
@@ -59,7 +59,8 @@
 
 <script>
 //导入接口
-import { info, logout } from "@/api/index.js";
+import { logout } from "@/api/index.js";
+import {getToken} from '@/utilis/token.js'
 // 导入操作token的工具
 import { removeToken } from "@/utilis/token.js";
 export default {
@@ -71,17 +72,7 @@ export default {
       isCollapse: false
     };
   },
-  created() {
-    //调用获取用户信息的接口
-    info().then(res => {
-      // window.console.log(res);
-
-      this.username = res.data.data.username;
-      //记得在前面还要拼接基地址,因为返回的头像路基不完整
-      //还要拼接/,不然就连在一起了
-      this.avatar = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
-    });
-  },
+  
 
   methods: {
     doLogout() {
@@ -95,6 +86,11 @@ export default {
           logout().then(() => {
             this.$message.success("退出成功");
             removeToken();
+
+            //清空vuex,赋值就是清空
+            this.$store.commit("changeUsername", "");
+            this.$store.commit("changeAvatar", "");
+
             //跳转到登录页面
             this.$router.push("/login");
           });
@@ -116,25 +112,24 @@ export default {
     }
   },
   created() {
-    // 调用获取用户信息的接口
-    // 带入token给服务器请求
-    // ajax是异步请求：异步的请求要等同步任务执行完毕才执行
-    info().then(res => {
-      if (res.data.code == 200) {
-        this.username = res.data.data.username;
-        // 记得在前面还要拼接基地址，因为返回的头像路径不完整，要拼接
-        // 还要拼接/，不然就连在一起了
-        this.avatar = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
-      } else if (res.data.code == 206) {
-        // 如果token有误
-
-        this.$message.error("登录状态异常，请重新登录就行");
-        // 把token删掉
-        removeToken();
-        this.$router.push("/login");
-      }
-    });
-  }
+    // // 调用获取用户信息的接口
+    // // 带入token给服务器请求
+    // // ajax是异步请求：异步的请求要等同步任务执行完毕才执行
+    // info().then(res => {
+    //   if (res.data.code == 200) {
+    //     this.username = res.data.data.username;
+    //     // 记得在前面还要拼接基地址，因为返回的头像路径不完整，要拼接
+    //     // 还要拼接/，不然就连在一起了
+    //     this.avatar = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
+    //   } else if (res.data.code == 206) {
+    //     // 如果token有误
+    //     this.$message.error("登录状态异常，请重新登录就行");
+    //     // 把token删掉
+    //     removeToken();
+    //     this.$router.push("/login");
+    //   }
+    // });
+  },
 };
 </script>
 
