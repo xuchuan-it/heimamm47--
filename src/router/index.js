@@ -89,9 +89,12 @@ router.beforeEach((to, from, next) => {
 
       if (res.data.code == 200) {
 
-        //把服务器返回的用户名取出来存到vuex
-        store.commit('changeUsername', res.data.data.username);
+        // console.log(res);
+        
+        // 把服务器返回的用户名取出来存到vuex
+        store.commit('changeUsername',res.data.data.username);
         store.commit('changeAvatar', process.env.VUE_APP_URL + '/' + res.data.data.avatar);
+
         //代表token是对的，那么直接放行
         next()
 
