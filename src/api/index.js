@@ -1,21 +1,18 @@
 import axios from 'axios'
-
 //导入操作token的文件
-import {getToken} from '@/utilis/token.js'
+import { getToken } from '@/utilis/token.js'
 
+window.console.log('接口文件index.js被执行了')
 
-// create :  axiosd 克隆方法
-//克隆一个axios对象出来,
-//他的名字叫indexRequest
-//他有一些初始基因,接收设置了基地址,以及设置了请求头携带token
-//所以以后,如果要是通过indexRequest这个对象去发请求,就会自动有基地址和自动携带tokenl
+// 克隆一个axios对象出来，
+// 他的名字叫indexRequest
+// 他有一些初始基因，就是设置了基地址，以及设置了请求头携带token
+// 所以以后，如果要是通过indexRequest这个对象去发请求，就会自动有基地址和自动携带token了
 let indexRequest = axios.create({
-    //基地址
-    baseURL:process.env.VUE_APP_URL,
-    // //请求头
-    // headers:{
-    //     token:getToken()
-    // }
+
+    // 基地址
+    baseURL: process.env.VUE_APP_URL,
+
 })
 
 
@@ -37,38 +34,50 @@ indexRequest.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-//获取登录的用户信息
-export function info(){
+
+
+// 获取登录的用户信息
+export function info() {
 
     // return axios({
-    //     url: process.env.VUE_APP_URL + '/info',
-    //     method: 'get',
-    //     headers:{
-    //         token:getToken() //从本地存储中读取出token
+    //     url: process.env.VUE_APP_URL + "/info",
+    //     method: "get",
+    //     headers: {
+
+    //         token: getToken() //从本地存储中读取出token
     //     }
-        
     // })
+    console.log('info里的代码被执行了');
+
 
     return indexRequest({
-        url:'/info',
-        method:'get'
+        url: "/info",
+        method: "get",
+        // // // 请求头
+        // headers: {
+        //     token: getToken()
+        // }
     })
 }
-//退出请求
-export function logout(){
-    
+
+// 退出请求
+export function logout() {
+
     // return axios({
-    //     url: process.env.VUE_APP_URL + '/logout',
+    //     url: process.env.VUE_APP_URL + "/logout",
     //     method: 'get',
-    //     headers:{
-    //         token:getToken()
+    //     headers: {
+
+    //         token: getToken()
     //     }
-        
     // })
 
-
     return indexRequest({
-        url:'/logout',
-        method:'get'
+        url: "/logout",
+        method: "get",
+        // // 请求头
+        // headers: {
+        //     token: getToken()
+        // }
     })
 }

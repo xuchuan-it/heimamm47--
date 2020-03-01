@@ -67,8 +67,9 @@
 <script>
 // 1.导入组件
 import reg from "./components/register.vue";
-import { login } from "@/api/login.js";
-import { setToken } from "@/utilis/token.js";
+import { login } from '@/api/login.js'
+import { setToken } from '@/utilis/token.js'
+
 // 2.注册组件
 
 // 3.在需要用组件的地方，写这个组件的标签
@@ -76,23 +77,28 @@ export default {
   components: {
     reg
   },
+ 
   data() {
     return {
-      //图片地址
+      // 图片地址
       imgUrl: process.env.VUE_APP_URL + "/captcha?type=login",
+
       // 跟表单双向绑定的数据
       form: {
-        phone: "",
-        password: "",
+        phone: "18511111111",
+        password: "12345678",
         code: "",
-        agree: false
+        agree: true
       },
+      // 规则对象
       rules: {
-        name: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        box: [
-          { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+        // 真正的规则
+        phone: [{ required: true, message: "手机号不能为空", trigger: "blur" }],
+
+        password: [
+          { required: true, message: "密码不能为空", trigger: "blur" }
         ],
+
         code: [{ required: true, message: "验证码不能为空", trigger: "blur" }],
 
         agree: [
@@ -111,13 +117,15 @@ export default {
       }
     };
   },
+
   methods: {
+    // 点击图片切换验证码的点击事件
     changeImgCode() {
-      this.imgUrl =
-        process.env.VUE_APP_URL + "/captcha?type=login&sb=" + Date.now();
+      this.imgUrl = process.env.VUE_APP_URL + "/captcha?type=login&sb=" + Date.now();
     },
-    //登录点击事件
-   doLogin() {
+
+    // 登录的点击事件
+    doLogin() {
       // 找到表单对象，调用validate方法
       this.$refs.loginForm.validate(v => {
         if (v) {
@@ -135,7 +143,9 @@ export default {
               //把token存起来
               // window.localStorage.setItem('token',res.data.data.token)
               setToken(res.data.data.token)
-              this.$message.success('登录成功')
+              // 在登录这里就提示了登录成功
+              // this.$message.success('登录成功')
+              // 提示后去做路由跳转了（所以后面会被导航守卫拦截下来）
               this.$router.push('/index');
             }else{
 
@@ -149,7 +159,6 @@ export default {
 
     // 注册的点击事件
     showReg() {
-      //点击显示注册框
       this.$refs.reg.dialogFormVisible = true;
     }
   }
@@ -218,8 +227,7 @@ export default {
       vertical-align: top;
     }
 
-    //可加可不加看自己习惯
-
+    // 可加可不加看自己习惯
     .agree {
       display: flex;
 
@@ -240,5 +248,3 @@ export default {
   }
 }
 </style>
-
-
